@@ -1,0 +1,47 @@
+---
+title: "Primer Parcial"
+author: "..."
+date: "2024-03-06"
+output: 
+  html_document:
+    theme: darkly
+    highlight: breezedark
+    toc: true
+    toc_float: true
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+install.packages("readxl", repos = "http://cran.us.r-project.org")
+library(readxl)
+```
+
+## Primer Parcial
+
+Cargamos el archivo xlsx con la libreria readxl.
+
+```{r}
+
+d_olimpicos <- read_excel("Olimpicos Atenas 2004.xlsx")
+
+#set.seed()
+ds_olimpicos <- d_olimpicos[sample(1:nrow(d_olimpicos), size=200), ]
+
+
+```
+Eliminamos columnas ID, NOC, Games, Year, Season y City
+```{r }
+ds_olimpicos$ID <- NULL
+
+ds_olimpicos$NOC <- NULL
+
+ds_olimpicos$Games <- NULL
+
+ds_olimpicos$Year <- NULL
+
+ds_olimpicos$Season <- NULL
+
+ds_olimpicos$City <- NULL
+
+```
