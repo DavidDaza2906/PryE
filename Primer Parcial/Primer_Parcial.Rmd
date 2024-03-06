@@ -4,6 +4,7 @@ author: "..."
 date: "2024-03-06"
 output: 
   html_document:
+    df_print: paged
     theme: darkly
     highlight: breezedark
     toc: true
@@ -44,4 +45,19 @@ ds_olimpicos$Season <- NULL
 
 ds_olimpicos$City <- NULL
 
+```
+
+## Medalleria
+```{r medallas por paises}
+
+index_con_medalla = ds_olimpicos$Medal != "NA"
+m_medalla <- ds_olimpicos[index_con_medalla,]
+pais_medalla <- m_medalla[, c("Team", "Medal")]
+
+tabla_Pais_medalla <- table(pais_medalla)
+medallas <- as.data.frame.matrix(tabla_Pais_medalla)
+
+medallas$puntos <- (medallas$Bronze + (medallas$Silver * 2) + (medallas$Gold * 3))
+medallas_ordenadas <- medallas[order(medallas$puntos, decreasing = TRUE),]
+medallas_ordenadas
 ```
