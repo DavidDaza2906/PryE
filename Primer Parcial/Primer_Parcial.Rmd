@@ -15,10 +15,18 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 install.packages("readxl", repos = "http://cran.us.r-project.org")
+install.packages("dplyr", repos= "http://cran.us.r-project.org")
+install.packages("ggplot2", repos= "http://cran.us.r-project.org")
+install.packages("descriptr", repos= "http://cran.us.r-project.org")
+
 library(readxl)
+library(dplyr)
+library(ggplot2)
+library(descriptr)
+
 ```
 
-## Primer Parcial
+## 1.
 
 Cargamos el archivo xlsx con la libreria readxl.
 
@@ -47,17 +55,104 @@ ds_olimpicos$City <- NULL
 
 ```
 
-## Medalleria
+
+## 2.Número total de países participantes por sexo
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+df_paises_sexo <- ds_olimpicos[, c("Sex", "Team")]
+df_paises_sexo_count <- df_paises_sexo %>%
+  group_by(Team, Sex) %>%
+  summarise(count = n())
+df_paises_sexo_count
+
+
+
+```
+
+
+
+## 3.Medalleria
 ```{r medallas por paises}
 
 index_con_medalla = ds_olimpicos$Medal != "NA"
 m_medalla <- ds_olimpicos[index_con_medalla,]
+
 pais_medalla <- m_medalla[, c("Team", "Medal")]
 
 tabla_Pais_medalla <- table(pais_medalla)
 medallas <- as.data.frame.matrix(tabla_Pais_medalla)
 
+
 medallas$puntos <- (medallas$Bronze + (medallas$Silver * 2) + (medallas$Gold * 3))
 medallas_ordenadas <- medallas[order(medallas$puntos, decreasing = TRUE),]
 medallas_ordenadas
+
+```
+
+
+
+## 4.Diagrama de barras para los deportes en competición
+
+```{r}
+
+df_sports <- ds_olimpicos[, c("Sport")]
+df_sports_count <- df_sports %>% 
+  group_by(Sport) %>% 
+  summarise(count = n())
+
+
+diag_barra <- ggplot(df_sports_count, mapping=aes(x = Sport, y=count)) +
+ geom_col() 
+diag_barra
+```
+
+## 5.Diagrama de caja y bigotes para sexo y pesos
+
+```{r}
+
+df_sexo_peso <- ds_olimpicos[, c("Sex", "Weight")]
+
+df_sexo_peso_n <- df_sexo_peso %>%
+  group_by(Sex, Weight) %>%
+  summarise(count = n())
+df_sexo_peso_n
+
+
+
+```
+## 6.Resumen completo de altura por sexo
+```{r}
+
+
+
+df_sexo_altura <- ds_olimpicos[, c("Sex", "Height")]
+df_sexo_altura_n <- df_sexo_altura %>%
+  group_by(Sex) %>%
+  summarise(mean_height = mean(Height),
+      median_height = median(Height),
+      min_height = min(Height),
+      max_height = max(Height),
+      mode_height = ds_mode(Height))
+df_sexo_altura_n
+
+
+```
+## 7. Tabla de frecuencias para la altura de las mujeres
+
+```{r}
+
+df_mujer_altura <- ds_olimpicos[, c("Sex", "Height")]
+df_mujer_altura <- filter(df_mujer_altura,Sex=="F")
+
+df_mujer_altura_n <- df_mujer_altura %>%
+  group_by(Sex,Height) %>%
+  summarise(count = n())
+
+ggplot(df_mujer_altura_n, aes(x = Height, y = count)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(title = "Frecuencia de altura por mujer", x = "Altura", y = "Count") +
+  theme_minimal()
+
+
 ```
