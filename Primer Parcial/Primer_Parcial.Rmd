@@ -14,27 +14,27 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-install.packages("readxl", repos = "http://cran.us.r-project.org")
-install.packages("dplyr", repos= "http://cran.us.r-project.org")
-install.packages("ggplot2", repos= "http://cran.us.r-project.org")
-install.packages("descriptr", repos= "http://cran.us.r-project.org")
+#install.packages("readxl", repos = "http://cran.us.r-project.org")
+#install.packages("dplyr", repos= "http://cran.us.r-project.org")
+#install.packages("ggplot2", repos= "http://cran.us.r-project.org")
+#install.packages("descriptr", repos= "http://cran.us.r-project.org")
 
 library(readxl)
 library(dplyr)
 library(ggplot2)
 library(descriptr)
+library(dplyr)
+library(knitr)
 
 ```
 
-## 1.
-
-Cargamos el archivo xlsx con la libreria readxl.
+## 1. Cargamos el archivo xlsx con la libreria readxl.
 
 ```{r}
 
 d_olimpicos <- read_excel("Olimpicos Atenas 2004.xlsx")
 
-#set.seed()
+set.seed(1234)
 ds_olimpicos <- d_olimpicos[sample(1:nrow(d_olimpicos), size=200), ]
 
 
@@ -61,12 +61,11 @@ ds_olimpicos$City <- NULL
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 
 df_paises_sexo <- ds_olimpicos[, c("Sex", "Team")]
+
 df_paises_sexo_count <- df_paises_sexo %>%
   group_by(Team, Sex) %>%
   summarise(count = n())
 df_paises_sexo_count
-
-
 
 ```
 
@@ -87,12 +86,11 @@ medallas <- as.data.frame.matrix(tabla_Pais_medalla)
 medallas$puntos <- (medallas$Bronze + (medallas$Silver * 2) + (medallas$Gold * 3))
 medallas_ordenadas <- medallas[order(medallas$puntos, decreasing = TRUE),]
 medallas_ordenadas
-
 ```
 
 
 
-## 4.Diagrama de barras para los deportes en competición
+## 4. Diagrama de barras para los deportes en competición
 
 ```{r}
 
@@ -103,25 +101,36 @@ df_sports_count <- df_sports %>%
 
 
 diag_barra <- ggplot(df_sports_count, mapping=aes(x = Sport, y=count)) +
- geom_col() 
+ geom_col(fill = "#aaaaaa") + 
+ labs(
+   title = "Deportes en competición",
+   x = "",
+   y = "Número de participantes") + 
+theme_dark() +
+theme(
+  plot.background = element_rect(fill = "gray20"),
+  panel.background = element_rect(fill = "gray20"),
+  axis.text = element_text(color = 'white'),
+  axis.title = element_text(color = 'white'),
+  title = element_text(color = 'white')
+)
 diag_barra
 ```
 
-## 5.Diagrama de caja y bigotes para sexo y pesos
+## 5. Diagrama de caja y bigotes para sexo y pesos
 
 ```{r}
 
-df_sexo_peso <- ds_olimpicos[, c("Sex", "Weight")]
+# Datos de muestra (reemplaza con tus propios datos)
+peso <- ds_olimpicos$Weight
+sexo <- ds_olimpicos$Sex
 
-df_sexo_peso_n <- df_sexo_peso %>%
-  group_by(Sex, Weight) %>%
-  summarise(count = n())
-df_sexo_peso_n
-
-
-
+# Crear el diagrama de caja y bigotes
+boxplot(peso ~ sexo, main="Diagrama de Caja y Bigotes por Sexo",
+        xlab="Sexo", ylab="Peso (kg)")
 ```
-## 6.Resumen completo de altura por sexo
+
+## 6. Resumen completo de altura por sexo
 ```{r}
 
 
@@ -134,13 +143,21 @@ df_sexo_altura_n <- df_sexo_altura %>%
       min_height = min(Height),
       max_height = max(Height),
       mode_height = ds_mode(Height))
+
 df_sexo_altura_n
 
-
+if (FALSE) {
+  
+# Generar la tabla con kable
+kable(df_sexo_altura_n, 
+      caption = "Altura por sexo",
+      col.names = c("Sexo", "Media", "Mediana", "Minimo", "Maximo", "Moda"),
+      align = "c")
+}
 ```
 ## 7. Tabla de frecuencias para la altura de las mujeres
 
-```{r}
+```{r  message=FALSE}
 
 df_mujer_altura <- ds_olimpicos[, c("Sex", "Height")]
 df_mujer_altura <- filter(df_mujer_altura,Sex=="F")
@@ -149,10 +166,28 @@ df_mujer_altura_n <- df_mujer_altura %>%
   group_by(Sex,Height) %>%
   summarise(count = n())
 
+df_mujer_altura
+
+if (FALSE) {
+  
 ggplot(df_mujer_altura_n, aes(x = Height, y = count)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   labs(title = "Frecuencia de altura por mujer", x = "Altura", y = "Count") +
   theme_minimal()
+}
 
+#histograma con frecuencia absoluta
+ggplot(df_mujer_altura, aes(x = Height)) +
+  geom_histogram(fill = "#aaaaaa", color = "gray20", bins = 10) +
+  labs(title = "Histograma de Alturas de Mujeres",
+       x = "Altura (cm)", y = "Número de Mujeres") +
+  theme_dark() +
+  theme(
+  plot.background = element_rect(fill = "gray20"),
+  panel.background = element_rect(fill = "gray20"),
+  axis.text = element_text(color = 'white'),
+  axis.title = element_text(color = 'white'),
+  title = element_text(color = 'white')
+)
 
 ```
