@@ -37,7 +37,6 @@ d_olimpicos <- read_excel("Olimpicos Atenas 2004.xlsx")
 set.seed(1234)
 ds_olimpicos <- d_olimpicos[sample(1:nrow(d_olimpicos), size=200), ]
 
-
 ```
 Eliminamos columnas ID, NOC, Games, Year, Season y City
 ```{r }
@@ -121,13 +120,6 @@ diag_barra
 
 ```{r}
 
-# Datos de muestra (reemplaza con tus propios datos)
-peso <- ds_olimpicos$Weight
-sexo <- ds_olimpicos$Sex
-
-# Crear el diagrama de caja y bigotes
-boxplot(peso ~ sexo, main="Diagrama de Caja y Bigotes por Sexo",
-        xlab="Sexo", ylab="Peso (kg)")
 ```
 
 ## 6. Resumen completo de altura por sexo
@@ -176,7 +168,7 @@ ggplot(df_mujer_altura_n, aes(x = Height, y = count)) +
   theme_minimal()
 }
 
-#histograma con frecuencia absoluta
+#histograma con frecuencia relativa
 ggplot(df_mujer_altura, aes(x = Height)) +
   geom_histogram(fill = "#aaaaaa", color = "gray20", bins = 10) +
   labs(title = "Histograma de Alturas de Mujeres",
