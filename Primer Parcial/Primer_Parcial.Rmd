@@ -9,7 +9,8 @@ output:
     highlight: breezedark
     toc: true
     toc_float: true
-
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -118,7 +119,27 @@ diag_barra
 
 ## 5. Diagrama de caja y bigotes para sexo y pesos
 
-```{r}
+```{r message=FALSE, warning=FALSE}
+  library(ggplot2)
+
+ 
+ggplot(data = d_olimpicos, aes(x = Sex, y = Weight)) +
+  stat_boxplot(geom = "errorbar", 
+               width = 0.2) +
+  geom_boxplot(fill = "#88CA7C", colour = "#24693D",  
+               alpha = 0.9, outlier.colour = "#5D91BD") +
+  scale_y_continuous(name = "Pesos") +    
+  scale_x_discrete(name = "Sexo") +       
+  ggtitle("Diagrama de caja y bigotes") + 
+  theme_dark() +
+  theme(
+    axis.line = element_line(colour = "black",size = 0.25),
+    plot.background = element_rect(fill = "gray20"),
+    panel.background = element_rect(fill = "gray20"),
+    axis.text = element_text(color = 'white'),
+    axis.title = element_text(color = 'white'),
+    title = element_text(color = 'white')
+)
 
 ```
 
@@ -149,16 +170,36 @@ kable(df_sexo_altura_n,
 ```
 ## 7. Tabla de frecuencias para la altura de las mujeres
 
-```{r  message=FALSE}
+```{r  message=FALSE, warning=FALSE}
+
 
 df_mujer_altura <- ds_olimpicos[, c("Sex", "Height")]
 df_mujer_altura <- filter(df_mujer_altura,Sex=="F")
+
+if (FALSE) {
+  
 
 df_mujer_altura_n <- df_mujer_altura %>%
   group_by(Sex,Height) %>%
   summarise(count = n())
 
 df_mujer_altura
+}
+
+altura_minima <- min(df_mujer_altura$Height)
+altura_maxima <- max(df_mujer_altura$Height)
+
+amplitud_intervalo <- 4
+
+intervalos <- seq(altura_minima, altura_maxima, by = amplitud_intervalo)
+
+frecuencia_absoluta <- cut(df_mujer_altura$Height, breaks = intervalos, right = FALSE)
+
+tabla_frecuencia <- table(frecuencia_absoluta)
+as.data.frame.array(tabla_frecuencia)
+
+frecuencia_relativa <- prop.table(tabla_frecuencia)
+
 
 if (FALSE) {
   
@@ -170,9 +211,9 @@ ggplot(df_mujer_altura_n, aes(x = Height, y = count)) +
 
 #histograma con frecuencia relativa
 ggplot(df_mujer_altura, aes(x = Height)) +
-  geom_histogram(fill = "#aaaaaa", color = "gray20", bins = 10) +
+  geom_histogram(aes(y = ..density..), fill = "#aaaaaa", color = "gray20", binwidth = 4) +
   labs(title = "Histograma de Alturas de Mujeres",
-       x = "Altura (cm)", y = "Número de Mujeres") +
+       x = "Altura (cm)", y = "Densidad") +
   theme_dark() +
   theme(
   plot.background = element_rect(fill = "gray20"),
