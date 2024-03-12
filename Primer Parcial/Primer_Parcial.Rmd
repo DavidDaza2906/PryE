@@ -1,6 +1,6 @@
 ---
 title: <span style="color:#FFA500">Primer Parcial </span>
-author: "Jauri Cortes Cardenas | Paula Burbano Aponte | Anyi Rodriguez Suarez | 
+author: "Jauri Cortes Cardenas | Paula Burbano Aponte | Anyi Rodriguez Suarez | David Daza Jaimes"
 date: "2024-03-11"
 output: 
   html_document:
@@ -12,7 +12,6 @@ output:
     toc_depth: 3
     code_folding: show
     toc_title: "Contenido"
-    css: "styles.css"
 editor_options: 
   chunk_output_type: console
 ---
