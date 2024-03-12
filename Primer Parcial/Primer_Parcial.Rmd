@@ -1,7 +1,8 @@
 ---
-title: "Primer Parcial"
-author: "..."
-date: "2024-03-06"
+title: <span style="color:#FFA500">Primer Parcial </span>
+author: "Jauri Cortes Cardenas | Paula Burbano Aponte | Anyi Rodriguez Suarez | 
+David Daza Jaimes "
+date: "2024-03-11"
 output: 
   html_document:
     df_print: paged
@@ -9,6 +10,10 @@ output:
     highlight: breezedark
     toc: true
     toc_float: true
+    toc_depth: 3
+    code_folding: show
+    toc_title: "Contenido"
+    css: "styles.css"
 editor_options: 
   chunk_output_type: console
 ---
@@ -29,17 +34,16 @@ library(knitr)
 
 ```
 
-## 1. Cargamos el archivo xlsx con la libreria readxl.
-
+##  <span style="color:#87CEFA"> 1. Carga de archivo xlsx con la libreria readxl. </span>
 ```{r}
 
 d_olimpicos <- read_excel("Olimpicos Atenas 2004.xlsx")
 
-set.seed(1234)
+set.seed(1858)
 ds_olimpicos <- d_olimpicos[sample(1:nrow(d_olimpicos), size=200), ]
 
 ```
-Eliminamos columnas ID, NOC, Games, Year, Season y City
+
 ```{r }
 ds_olimpicos$ID <- NULL
 
@@ -54,9 +58,9 @@ ds_olimpicos$Season <- NULL
 ds_olimpicos$City <- NULL
 
 ```
+Se eliminan columnas ID, NOC, Games, Year, Season y City.
 
-
-## 2.Número total de países participantes por sexo
+## <span style="color:#87CEFA"> 2. Número total de países participantes por sexo </span>
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 
@@ -68,10 +72,9 @@ df_paises_sexo_count <- df_paises_sexo %>%
 df_paises_sexo_count
 
 ```
+Se organizan los datos por sexo y país.
 
-
-
-## 3.Medalleria
+## <span style="color:#87CEFA"> 3. Medalleria </span>
 ```{r medallas por paises}
 
 index_con_medalla = ds_olimpicos$Medal != "NA"
@@ -87,10 +90,9 @@ medallas$puntos <- (medallas$Bronze + (medallas$Silver * 2) + (medallas$Gold * 3
 medallas_ordenadas <- medallas[order(medallas$puntos, decreasing = TRUE),]
 medallas_ordenadas
 ```
+Se hace una clasificaión por medallas, se ordenan los datos y se asignan puntos a las medallas. Dando así que Australia es el país con mayor puntaje.
 
-
-
-## 4. Diagrama de barras para los deportes en competición
+## <span style="color:#87CEFA"> 4. Diagrama de barras para los deportes en competición </span>
 
 ```{r}
 
@@ -101,7 +103,7 @@ df_sports_count <- df_sports %>%
 
 
 diag_barra <- ggplot(df_sports_count, mapping=aes(x = Sport, y=count)) +
- geom_col(fill = "#aaaaaa") + 
+ geom_col(fill = "#FFEC8B") + 
  labs(
    title = "Deportes en competición",
    x = "",
@@ -117,7 +119,9 @@ theme(
 diag_barra
 ```
 
-## 5. Diagrama de caja y bigotes para sexo y pesos
+Se nota que la moda de Natación es la que más participantes tiene en la competición.
+
+## <span style="color:#87CEFA"> 5. Diagrama de caja y bigotes para sexo y pesos </span>
 
 ```{r message=FALSE, warning=FALSE}
   library(ggplot2)
@@ -143,7 +147,9 @@ ggplot(data = d_olimpicos, aes(x = Sex, y = Weight)) +
 
 ```
 
-## 6. Resumen completo de altura por sexo
+Se observa que los hombres tienen un rango de pesos más amplio que las mujeres, además de que la mediana de los hombres es mayor que la de las mujeres. 
+
+## <span style="color:#87CEFA"> 6. Resúmen completo de altura por sexo </span>
 ```{r}
 
 
@@ -168,7 +174,10 @@ kable(df_sexo_altura_n,
       align = "c")
 }
 ```
-## 7. Tabla de frecuencias para la altura de las mujeres
+
+Se observa que la altura promedio de los hombres es mayor que la de las mujeres, además de que la mediana de los hombres es mayor que la de las mujeres. También el rango de las alturas de los hombres es más amplio que el de las mujeres.
+
+##  <span style="color:#87CEFA"> 7. Tabla de frecuencias para la altura de las mujeres </span>
 
 ```{r  message=FALSE, warning=FALSE}
 
@@ -211,7 +220,7 @@ ggplot(df_mujer_altura_n, aes(x = Height, y = count)) +
 
 #histograma con frecuencia relativa
 ggplot(df_mujer_altura, aes(x = Height)) +
-  geom_histogram(aes(y = ..density..), fill = "#aaaaaa", color = "gray20", binwidth = 4) +
+  geom_histogram(aes(y = ..density..), fill = "#FFA07A", color = "gray20", binwidth = 4) +
   labs(title = "Histograma de Alturas de Mujeres",
        x = "Altura (cm)", y = "Densidad") +
   theme_dark() +
@@ -224,3 +233,9 @@ ggplot(df_mujer_altura, aes(x = Height)) +
 )
 
 ```
+
+El intervalo de alturas más denso para las mujeres es de 164 cm a 168 cm y el rango menos denso es de 148 cm a 152cm.
+
+## <span style="color:#87CEFA">8. Conclusiones </span>
+
+
