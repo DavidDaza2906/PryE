@@ -1,7 +1,6 @@
 ---
 title: <span style="color:#FFA500">Primer Parcial </span>
 author: "Jauri Cortes Cardenas | Paula Burbano Aponte | Anyi Rodriguez Suarez | 
-David Daza Jaimes "
 date: "2024-03-11"
 output: 
   html_document:
@@ -64,12 +63,16 @@ Se eliminan columnas ID, NOC, Games, Year, Season y City.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 
-df_paises_sexo <- ds_olimpicos[, c("Sex", "Team")]
+df_paises_sexo <- ds_olimpicos[, c("Team", "Sex")]
 
-df_paises_sexo_count <- df_paises_sexo %>%
-  group_by(Team, Sex) %>%
-  summarise(count = n())
-df_paises_sexo_count
+tabla_paises_sexo <- table(df_paises_sexo)
+
+as.data.frame.array(tabla_paises_sexo)
+
+total_hombres <- sum(tabla_paises_sexo[, "M"])
+total_mujeres <- sum(tabla_paises_sexo[, "F"])
+
+data.frame(Sex = c("Hombres", "Mujeres"),total = c(total_hombres, total_mujeres))
 
 ```
 Se organizan los datos por sexo y país.
@@ -238,4 +241,21 @@ El intervalo de alturas más denso para las mujeres es de 164 cm a 168 cm y el r
 
 ## <span style="color:#87CEFA">8. Conclusiones </span>
 
+### Número total de países participantes por sexo
+De acuerdo con los resultados, hubo un total de 122 participantes hombres y 78 participantes mujeres en estos Juegos Olímpicos. Esto refleja una brecha de género significativa en la representación deportiva en estos Juegos Olímpicos, lo cual podría indicar la necesidad de promover una mayor equidad e inclusión de atletas femeninas en el ámbito deportivo de alto rendimiento.
+
+### Medallería
+Los países con más medallas fueron Australia (8), China (7), Se puede observar que las potencias deportivas tradicionales como China y Australia tuvieron un buen desempeño en la obtención de medallas.
+
+### Diagrama de barras para los deportes en competición 
+El diagrama de barras muestra la cantidad de participantes por deporte. Se puede ver que los deportes con más participantes fueron Natación, Cicclismo y Canotaje Esto indica cuáles fueron las disciplinas más populares y con mayor representación en estos Juegos Olímpicos.
+
+### Diagrama de caja y bigotes para sexo y pesos
+El diagrama de caja y bigotes muestra que, en general, los hombres tienen pesos más altos que las mujeres. Además, se puede observar que hay más variabilidad en los pesos de los hombres en comparación con las mujeres.
+
+### Resumen completo de altura por sexo
+El resumen muestra que la altura promedio de las mujeres participantes fue de 167 cm, mientras que la de los hombres fue de 180 cm. Además, se pueden ver otras medidas como la mediana, el mínimo, el máximo y la moda de las alturas para cada sexo.
+
+### Tabla de frecuencias para la altura de las mujeres:
+La tabla de frecuencias y el histograma muestran la distribución de las alturas de las mujeres participantes. Se puede observar que la mayoría de las alturas se encuentran entre 164 cm y 172 cm, con una distribución aproximadamente simétrica.
 
